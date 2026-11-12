@@ -1,0 +1,66 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "provider": {
+    "together": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Together AI (direct)",
+      "options": {
+        "baseURL": "https://api.together.xyz/v1",
+        "apiKey": "{env:TOGETHER_API_KEY}",
+        "includeUsage": true
+      },
+      "models": {
+        "moonshotai/Kimi-K3": {
+          "name": "Kimi K3 (Together, MXFP4)",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": { "context": 1048576, "output": 131072 },
+          "cost": { "input": 3.0, "output": 15.0, "cache_read": 0.3 },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
+          }
+        },
+        "zai-org/GLM-5.3": {
+          "name": "GLM-5.3 (Together, FP4)",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": { "context": 1048576, "output": 262144 },
+          "cost": { "input": 1.4, "output": 4.4, "cache_read": 0.26 },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
+          }
+        },
+        "Qwen/Qwen3.8-Flash": {
+          "name": "Qwen3.8-Flash (Together)",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": { "context": 1000000, "output": 262144 },
+          "cost": { "input": 0.15, "output": 0.47, "cache_read": 0.15 },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
+          }
+        },
+        "deepseek-ai/DeepSeek-V4-Flash-0731": {
+          "name": "DeepSeek-V4-Flash-0731 (Together)",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": { "context": 1048576, "output": 262144 },
+          "cost": { "input": 0.14, "output": 0.28, "cache_read": 0.03 },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "plugin": "petstore-plugin",
+  "version": "1.0.1",
+  "repo": "https://github.com/mehnoorsiddiqui/petstore-context-plugin",
+  "commit": "b5eee98a3e7fe1fbbc1af1872134ffaf011f44dc",
+  "installedAt": "2026-11-12T12:10:58Z",
+  "skills": [
+    "dotnet-authentication",
+    "dotnet-calling-endpoints",
+    "dotnet-client-initialization",
+    "dotnet-configuration-resilience",
+    "dotnet-error-handling",
+    "dotnet-getting-started",
+    "dotnet-integrate-swagger-petstore-open-api-3-1-0",
+    "dotnet-models",
+    "dotnet-testing"
+  ],
+  "agents": [
+    "swagger-petstore-open-api-3-1-0-planner"
+  ]
+}

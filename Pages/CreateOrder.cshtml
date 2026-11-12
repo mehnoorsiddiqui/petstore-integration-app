@@ -1,0 +1,51 @@
+@page
+@model PetstoreWeb.Pages.CreateOrderModel
+@{
+    ViewData["Title"] = "Create a pet order";
+}
+
+<h1>Create a pet order</h1>
+
+<p>Place a new order with Petstore and see the created order.</p>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="mb-3">
+        <label asp-for="PetId" class="form-label">Pet id</label>
+        <input asp-for="PetId" class="form-control" />
+        <span asp-validation-for="PetId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Quantity" class="form-label">Quantity</label>
+        <input asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Place order</button>
+</form>
+
+@if (Model.CreatedOrder is not null)
+{
+    <hr />
+    <h2>Created order</h2>
+    <dl class="row">
+        <dt class="col-sm-2">Id</dt>
+        <dd class="col-sm-10">@Model.CreatedOrder.Id</dd>
+        <dt class="col-sm-2">Pet id</dt>
+        <dd class="col-sm-10">@Model.CreatedOrder.PetId</dd>
+        <dt class="col-sm-2">Quantity</dt>
+        <dd class="col-sm-10">@Model.CreatedOrder.Quantity</dd>
+        <dt class="col-sm-2">Status</dt>
+        <dd class="col-sm-10">@PetstoreWeb.Pages.CreateOrderModel.FormatStatus(Model.CreatedOrder.Status)</dd>
+        <dt class="col-sm-2">Ship date</dt>
+        <dd class="col-sm-10">@Model.CreatedOrder.ShipDate</dd>
+        <dt class="col-sm-2">Complete</dt>
+        <dd class="col-sm-10">@Model.CreatedOrder.Complete</dd>
+    </dl>
+}
+else if (Model.Message is not null)
+{
+    <hr />
+    <div class="alert @(Model.OutcomeUnknown ? "alert-warning" : "alert-danger")" role="alert">
+        @Model.Message
+    </div>
+}
