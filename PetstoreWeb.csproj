@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SwaggerPetstoreOpenApi310" Version="1.0.1" />
+    <PackageReference Include="SwaggerPetstoreOpenApi310" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
