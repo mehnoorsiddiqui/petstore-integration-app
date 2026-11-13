@@ -1,3 +1,4 @@
+using System.Net;
 using SwaggerPetstoreOpenApi310;
 using SwaggerPetstoreOpenApi310.Core.Exceptions;
 using SwaggerPetstoreOpenApi310.Errors;
@@ -13,6 +14,8 @@ public sealed record PetstoreOrderResult
     public string? Error { get; init; }
 
     public bool OutcomeUnknown { get; init; }
+
+    public HttpStatusCode? StatusCode { get; init; }
 }
 
 public sealed class PetstoreOrderService(
@@ -36,13 +39,22 @@ public sealed class PetstoreOrderService(
                 otherwise: raw => raw.ReadAsString());
             logger.LogError("PlaceOrder rejected with HTTP {StatusCode}: {Body}", (int)ex.StatusCode, body);
 
-            return new PetstoreOrderResult { Error = $"The store rejected the order (HTTP {(int)ex.StatusCode})." };
+            return new PetstoreOrderResult { Error = $"The store rejected the order (HTTP {(int)ex.StatusCode}).", StatusCode = ex.StatusCode };
         }
         catch (ResponseDeserializationException ex)
         {
             logger.LogError(ex, "PlaceOrder returned an unreadable response with HTTP {StatusCode}.", (int)ex.StatusCode);
 
-            return new PetstoreOrderResult { Error = "The store returned a response that could not be processed." };
+            var outcomeUnknown = ex.StatusCode is >= HttpStatusCode.OK and < HttpStatusCode.Ambiguous;
+
+            return new PetstoreOrderResult
+            {
+                OutcomeUnknown = outcomeUnknown,
+                StatusCode = ex.StatusCode,
+                Error = outcomeUnknown
+                    ? "The order may have been placed, but the store's response could not be read."
+                    : "The store returned a response that could not be processed.",
+            };
         }
         catch (SdkTimeoutException ex)
         {
@@ -89,17 +101,21 @@ public sealed class PetstoreOrderService(
                 otherwise: raw => raw.ReadAsString());
             logger.LogError("GetOrderById returned HTTP {StatusCode}: {Body}", (int)ex.StatusCode, body);
 
-            var message = ex.StatusCode is System.Net.HttpStatusCode.NotFound or System.Net.HttpStatusCode.BadRequest
+            var message = ex.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.BadRequest
                 ? $"No order was found for id {orderId}."
                 : $"The store returned an unexpected error (HTTP {(int)ex.StatusCode}).";
 
-            return new PetstoreOrderResult { Error = message };
+            return new PetstoreOrderResult { Error = message, StatusCode = ex.StatusCode };
         }
         catch (ResponseDeserializationException ex)
         {
             logger.LogError(ex, "GetOrderById returned an unreadable response with HTTP {StatusCode}.", (int)ex.StatusCode);
 
-            return new PetstoreOrderResult { Error = "The store returned a response that could not be processed." };
+            return new PetstoreOrderResult
+            {
+                StatusCode = ex.StatusCode,
+                Error = "The store returned a response that could not be processed.",
+            };
         }
         catch (SdkTimeoutException ex)
         {
