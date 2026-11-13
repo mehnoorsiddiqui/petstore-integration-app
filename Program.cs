@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using PetstoreWeb.Endpoints;
 using PetstoreWeb.Services;
 using SwaggerPetstoreOpenApi310;
 using SwaggerPetstoreOpenApi310.Core.Configuration;
@@ -30,10 +31,12 @@ builder.Services.AddSwaggerPetstoreOpenApi310Client(options =>
     };
 });
 
+builder.Services.AddTransient<PetstoreOrderJsonBodyHandler>();
 builder.Services.AddHttpClient(Options.DefaultName, client =>
 {
     client.Timeout = TimeSpan.FromSeconds(30);
-});
+})
+.AddHttpMessageHandler<PetstoreOrderJsonBodyHandler>();
 
 builder.Services.AddScoped<PetstoreOrderService>();
 
@@ -52,4 +55,8 @@ app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
 
+app.MapOrderApi();
+
 app.Run();
+
+public partial class Program { }

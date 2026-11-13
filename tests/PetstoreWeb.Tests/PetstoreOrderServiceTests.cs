@@ -72,6 +72,7 @@ public class PetstoreOrderServiceTests
 
         Assert.Null(result.Order);
         Assert.False(result.OutcomeUnknown);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
         Assert.Contains("rejected", result.Error);
     }
 
@@ -84,7 +85,20 @@ public class PetstoreOrderServiceTests
 
         Assert.Null(result.Order);
         Assert.False(result.OutcomeUnknown);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
         Assert.Contains("500", result.Error);
+    }
+
+    [Fact]
+    public async Task PlaceOrderAsync_UnreadableSuccessBody_ReportsUnknownOutcome()
+    {
+        var service = TestClient.Returning(HttpStatusCode.OK, "not-json").Service();
+
+        var result = await service.PlaceOrderAsync(petId: 3, quantity: 4, CancellationToken.None);
+
+        Assert.Null(result.Order);
+        Assert.True(result.OutcomeUnknown);
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }
 
     [Fact]
@@ -97,6 +111,7 @@ public class PetstoreOrderServiceTests
 
         Assert.Null(result.Order);
         Assert.True(result.OutcomeUnknown);
+        Assert.Null(result.StatusCode);
         Assert.Contains("may have been placed", result.Error);
         Assert.Single(handler.Requests);
     }
@@ -123,6 +138,7 @@ public class PetstoreOrderServiceTests
         var result = await service.GetOrderAsync(orderId: 11, CancellationToken.None);
 
         Assert.Null(result.Order);
+        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
         Assert.Equal("No order was found for id 11.", result.Error);
     }
 }
