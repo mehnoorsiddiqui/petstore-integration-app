@@ -17,7 +17,7 @@ public sealed record OrderDto
     public long? PetId { get; init; }
 
     [JsonPropertyName("quantity")]
-    public int? Quantity { get; init; }
+    public long? Quantity { get; init; }
 
     [JsonPropertyName("status")]
     public string? Status { get; init; }
